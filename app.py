@@ -5,8 +5,57 @@ import json
 import plotly.graph_objects as go
 import time
 
+
+def inject_custom_style():
+    st.markdown(
+        """
+        <style>
+        .main {
+            background: linear-gradient(180deg, #f8fbff 0%, #f3f7ff 100%);
+        }
+        .block-container {
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+        }
+        .hero-card {
+            background: linear-gradient(120deg, #2563eb, #4f46e5);
+            border-radius: 16px;
+            padding: 24px;
+            color: white;
+            box-shadow: 0 12px 30px rgba(79, 70, 229, 0.25);
+            margin-bottom: 1rem;
+        }
+        .hero-subtitle {
+            opacity: 0.95;
+            font-size: 0.98rem;
+        }
+        .section-title {
+            font-weight: 700;
+            margin-top: 0.5rem;
+            margin-bottom: 0.8rem;
+            color: #1f2937;
+        }
+        .tip-card {
+            background: white;
+            border: 1px solid #dbeafe;
+            border-left: 5px solid #2563eb;
+            border-radius: 14px;
+            padding: 12px 14px;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.08);
+        }
+        div[data-testid="stMetricValue"] {
+            color: #1d4ed8;
+            font-weight: 700;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
 # ================= 1. 页面全局配置 =================
 st.set_page_config(page_title="社交电商智能营销系统", page_icon="🛒", layout="wide")
+inject_custom_style()
 
 # ================= 2. 左侧边栏 (控制中心) =================
 with st.sidebar:
@@ -38,15 +87,27 @@ with st.sidebar:
     st.caption("👨‍💻 Developed for Data Science & AI Marketing")
 
 # ================= 3. 主页面头部 =================
-st.title("🛒 RFM-S 社交电商智能营销系统")
-st.write("基于 RFM-S 聚类模型与 Gemini 大模型的自动化营销闭环")
+st.markdown(
+    """
+    <div class="hero-card">
+        <h1>🛒 RFM-S 社交电商智能营销系统</h1>
+        <p class="hero-subtitle">基于 RFM-S 聚类模型与 Gemini 大模型的自动化营销闭环，让诊断、触达与文案生成更智能。</p>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
+
+metric_col1, metric_col2, metric_col3 = st.columns(3)
+metric_col1.metric("智能诊断模式", "单用户", "精准分析")
+metric_col2.metric("自动化引擎", "批量生成", "提效 20x")
+metric_col3.metric("文案风格", "5 种语气", "A/B 测试")
 
 # ================= 4. 核心功能区 (使用标签页分离功能) =================
 tab1, tab2 = st.tabs(["🎯 单用户精准诊断 (精细化)", "🚀 批量自动化生成 (全量提效)"])
 
 # ----------------- Tab 1: 单用户精细化诊断 -----------------
 with tab1:
-    st.write("### 🔍 搜索目标用户")
+    st.markdown('<div class="section-title">🔍 搜索目标用户</div>', unsafe_allow_html=True)
     
     # 读取原始大表用于单人查询
     @st.cache_data
@@ -58,7 +119,10 @@ with tab1:
         
         # 动态获取列名提示用户
         columns_list = df.columns.tolist()
-        st.caption(f"提示：你的数据表包含这些列: {', '.join(columns_list)}")
+        st.markdown(
+            f'<div class="tip-card">💡 当前数据表字段：{", ".join(columns_list)}</div>',
+            unsafe_allow_html=True,
+        )
         
         target_user_id = st.text_input("🎯 请输入需要诊断的用户 ID：", "")
         
@@ -144,7 +208,7 @@ with tab1:
 
 # ----------------- Tab 2: 批量处理引擎 (带防崩溃保护) -----------------
 with tab2:
-    st.write("### 📁 批量用户名单上传")
+    st.markdown('<div class="section-title">📁 批量用户名单上传</div>', unsafe_allow_html=True)
     st.info("💡 提示：请上传包含用户数据特征的 CSV 文件。系统将为每位用户自动生成专属营销文案。")
     
     uploaded_file = st.file_uploader("选择一个 CSV 文件进行批量处理", type=['csv'])
